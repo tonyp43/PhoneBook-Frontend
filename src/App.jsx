@@ -1,8 +1,13 @@
 import './App.css'
 import React from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Login from './Login'
-import Register from './Register'
+import Login from './views/Login'
+import Register from './views/Register'
+import Dashboard from './views/Dashboard'
+
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
@@ -12,7 +17,9 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />}></Route>
         <Route path='/Register' element={<Register />}></Route>
+        <Route path='/Dashboard' element={<Dashboard />}></Route>
       </Routes>
+      <ToastContainer position="top-right" />
     </BrowserRouter>
   )
 }
