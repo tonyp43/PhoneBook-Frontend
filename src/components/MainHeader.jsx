@@ -4,7 +4,7 @@ import styles from './MainHeader.module.css';
 import { useNavigate } from 'react-router-dom';
 import { getUsername, logout } from '../services/authServices';
 
-function MainHeader() {
+function MainHeader({ onCreateContact }) {
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -16,7 +16,7 @@ function MainHeader() {
         <header className={styles.header}>
             <div className={styles.left}>
                 <span className={styles.title}>Phonebook</span>
-                <button className={styles.button}>
+                <button className={styles.button} onClick={onCreateContact}>
                     <FaPlus className={styles.buttonIcon} />
                     New Contact
                 </button>
