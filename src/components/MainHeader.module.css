@@ -1,0 +1,68 @@
+/* MainHeader.module.css */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.left {
+    display: flex;
+    align-items: center;
+}
+
+.title {
+    font-size: 2rem;
+    color: #7f50e4;
+    /* Increase the font size for the Phonebook text */
+}
+
+.right {
+    display: flex;
+    align-items: center;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #7f50e4;
+    border: none;
+    border-radius: 4px;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buttonIcon {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+.greeting {
+    font-size: 1rem;
+    color: #7f50e4;
+}
+
+/* Style for the Logout button */
+.buttonLogout {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    color: #7f50e4;
+    background-color: transparent;
+    border: 2px solid #7f50e4;
+    border-radius: 4px;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.buttonLogout:hover {
+    background-color: #7f50e4;
+    color: #fff;
+}

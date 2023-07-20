@@ -1,10 +1,10 @@
 import { React } from 'react';
+import DashboardHeader from '../components/DashboardHeader';
+import MainHeader from '../components/MainHeader';
 
-function Dashboard(){
-    return(
-        <>
-        <h2>Cool</h2>
-        </>
+function Dashboard() {
+    return (
+        <MainHeader />
     )
 }
 
