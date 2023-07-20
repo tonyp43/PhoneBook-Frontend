@@ -8,6 +8,10 @@ const getToken = () => {
   return localStorage.getItem('token');
 };
 
+const getUsername = () => {
+  return localStorage.getItem('username');
+};
+
 const setAuthHeaders = (headers) => {
   const token = getToken();
   if (token) {
@@ -58,6 +62,11 @@ const login = async (username, password) => {
 
       // Store the token in local storage or any other desired storage mechanism
       localStorage.setItem('token', token);
+      localStorage.setItem('username', username);
+
+      toast.success('Login successful', {
+        position: toast.POSITION.TOP_RIGHT,
+      });
 
       return true;
     } else {
@@ -98,4 +107,27 @@ const fetchApiData = async (url, options = {}) => {
   }
 };
 
-export { register, login, fetchApiData };
+const isTokenExpired = () => {
+  const token = getToken();
+  if (!token) {
+    // No token found
+    return true;
+  }
+
+  const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+  const expirationTimestamp = tokenPayload.exp;
+  const currentTimestamp = Math.floor(Date.now() / 1000); // Current time in seconds
+
+  return currentTimestamp > expirationTimestamp;
+};
+
+const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+
+  toast.success('Logged out successfully', {
+    position: toast.POSITION.TOP_RIGHT,
+  });
+};
+
+export { register, login, getToken, getUsername, fetchApiData, isTokenExpired, logout };

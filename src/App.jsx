@@ -15,9 +15,9 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Login />}></Route>
+        <Route path='/' element={<Dashboard />}></Route>
         <Route path='/Register' element={<Register />}></Route>
-        <Route path='/Dashboard' element={<Dashboard />}></Route>
+        <Route path='/Login' element={<Login />}></Route>
       </Routes>
       <ToastContainer position="top-right" />
     </BrowserRouter>

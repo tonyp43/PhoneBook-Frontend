@@ -23,7 +23,7 @@ function Register() {
     setIsSubmitting(false);
 
     if (registrationSuccessful) {
-      navigate('/');
+      navigate('/login');
     } else {
       // Handle registration failure
     }
@@ -31,7 +31,7 @@ function Register() {
 
   return (
     <div className="login-form-container">
-      <form form onSubmit={handleSubmit} className="login-form">
+      <form onSubmit={handleSubmit} className="login-form">
         <div className="login-form-content">
           <h3 className="login-form-title">Register</h3>
           <div className="form-group mt-3">
@@ -67,7 +67,7 @@ function Register() {
             </button>
           </div>
           <p className="login-forgot-password text-right mt-2">
-            Already have an account? <Link to="/">Login</Link>
+            Already have an account? <Link to="/login">Login</Link>
           </p>
         </div>
       </form>

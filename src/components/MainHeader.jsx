@@ -1,8 +1,17 @@
 import React from 'react';
 import { FaUserCircle, FaPlus, FaSignOutAlt } from 'react-icons/fa';
 import styles from './MainHeader.module.css';
+import { useNavigate } from 'react-router-dom';
+import { getUsername, logout } from '../services/authServices';
 
 function MainHeader() {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('login');
+    };
+
     return (
         <header className={styles.header}>
             <div className={styles.left}>
@@ -13,8 +22,8 @@ function MainHeader() {
                 </button>
             </div>
             <div className={styles.right}>
-                <span className={styles.greeting}>USERNAME</span>
-                <button className={styles.buttonLogout}>
+                <span className={styles.greeting}>{getUsername()}</span>
+                <button className={styles.buttonLogout} onClick={handleLogout}>
                     Logout
                 </button>
             </div>
