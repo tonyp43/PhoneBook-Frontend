@@ -1,56 +1,33 @@
 import { useState, useEffect } from 'react';
-
 import Contact from './Contact';
 import NewContact from './NewContact';
 import Modal from './Modal';
 import classes from './ContactList.module.css';
-import { hostUrl } from '../config/apiConfig';
-import { getToken, fetchApiData, isTokenExpired } from '../services/authServices';
-import axios from 'axios';
-import UpdateModal from './UpdateModal';
-import UpdateContact from './UpdateContact';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import UpdateModal from './UpdateModal';
+import UpdateContact from './UpdateContact';
+import * as apiServices from '../services/apiServices';
 
 function ContactList({ isPosting, onStopPosting, isCreating }) {
     const [contacts, setContacts] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
-
-    const [selectedContact, setSelectedContact] = useState(null); // Track the selected contact
+    const [selectedContact, setSelectedContact] = useState(null);
 
     function showUpdateModalHandler(contact) {
-        setSelectedContact(contact); // Set the selected contact when the "Update" button is clicked
+        setSelectedContact(contact);
     }
 
     function hideUpdateModalHandler() {
-        setSelectedContact(null); // Clear the selected contact when the modal is closed
+        setSelectedContact(null);
     }
-
 
     useEffect(() => {
         const fetchContacts = async () => {
             setIsFetching(true);
             try {
-                if (!getToken() || isTokenExpired()) {
-                    // Token is not available or expired, redirect to login or perform any other action
-                    // Example: history.push('/login'); // if you are using React Router
-                    return;
-                }
-
-                const response = await axios.get(hostUrl + '/api/Contact/GetContacts', {
-                    headers: {
-                        'Authorization': `Bearer ${getToken()}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-
-                if (response.status === 200) {
-                    const data = response.data
-                    setContacts(data);
-                } else {
-                    throw new Error('Failed to fetch contacts');
-                }
+                const data = await apiServices.fetchContacts();
+                setContacts(data);
             } catch (error) {
                 console.error(error);
                 // Handle the error state appropriately, e.g., display an error message.
@@ -62,90 +39,39 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
     }, []);
 
     const addContactHandler = async (contactData) => {
-        try {
-            const response = await axios.post(hostUrl + '/api/Contact/CreateContact', contactData, {
-                headers: {
-                    'Authorization': `Bearer ${getToken()}`,
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (response.status === 200) {
-                setContacts((existingContacts) => [contactData, ...existingContacts]);
-            } else {
-                console.log('Request failed:', response.status);
-
-            }
-        } catch (error) {
-            console.error('Error:', error);
+        const success = await apiServices.addContact(contactData);
+        if (success) {
+            setContacts((existingContacts) => [contactData, ...existingContacts]);
         }
     };
 
     const updateContactHandler = async (contactData) => {
-        try {
-            const response = await axios.post(
-                hostUrl + '/api/Contact/Update?id=' + selectedContact.id,
-                contactData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${getToken()}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
+        const success = await apiServices.updateContact(contactData, selectedContact.id);
+        if (success) {
+            setContacts((prevContacts) =>
+                prevContacts.map((contact) =>
+                    contact.id === selectedContact.id ? { ...contact, ...contactData } : contact
+                )
             );
-
-            if (response.status === 200) {
-                // Update the contact in the contacts state with the new data
-                setContacts((prevContacts) =>
-                    prevContacts.map((contact) =>
-                        contact.id === selectedContact.id ? { ...contact, ...contactData } : contact
-                    )
-                );
-                toast.success('Update successful', {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-                // Hide the update modal after successful update
-                hideUpdateModalHandler();
-            } else {
-                console.log('Request failed:', response.status);
-            }
-        } catch (error) {
-            console.error('Error:', error);
+            toast.success('Update successful', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            hideUpdateModalHandler();
         }
     };
-
 
     const deleteContactHandler = async () => {
-        try {
-            const response = await axios.delete(
-                hostUrl + '/api/Contact/DeleteContact?id=' + selectedContact.id,
-                {
-                    headers: {
-                        Authorization: `Bearer ${getToken()}`,
-                        'Content-Type': 'application/json',
-                    },
-                }
+        const success = await apiServices.deleteContact(selectedContact.id);
+        if (success) {
+            setContacts((prevContacts) =>
+                prevContacts.filter((contact) => contact.id !== selectedContact.id)
             );
-
-            if (response.status === 200) {
-                // Remove the deleted contact from the contacts state
-                setContacts((prevContacts) =>
-                    prevContacts.filter((contact) => contact.id !== selectedContact.id)
-                );
-                toast.success('Delete successful', {
-                    position: toast.POSITION.TOP_RIGHT,
-                });
-                // Hide the update modal after successful deletion
-                hideUpdateModalHandler();
-            } else {
-                console.log('Request failed:', response.status);
-            }
-        } catch (error) {
-            console.error('Error:', error);
+            toast.success('Delete successful', {
+                position: toast.POSITION.TOP_RIGHT,
+            });
+            hideUpdateModalHandler();
         }
     };
-
-
 
     return (
         <>
@@ -160,9 +86,17 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                 </Modal>
             )}
             {!isFetching && contacts.length > 0 && (
-                <ul className={classes.contacts} >
+                <ul className={classes.contacts}>
                     {contacts.map((contact) => (
-                        <Contact key={contact.id} firstName={contact.firstName} lastName={contact.lastName} phoneNumber={contact.phoneNumber} email={contact.email} socialNetworkLink={contact.socialNetworkLink} onUpdate={() => showUpdateModalHandler(contact)} />
+                        <Contact
+                            key={contact.id}
+                            firstName={contact.firstName}
+                            lastName={contact.lastName}
+                            phoneNumber={contact.phoneNumber}
+                            email={contact.email}
+                            socialNetworkLink={contact.socialNetworkLink}
+                            onUpdate={() => showUpdateModalHandler(contact)}
+                        />
                     ))}
                 </ul>
             )}
