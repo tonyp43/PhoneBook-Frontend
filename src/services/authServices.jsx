@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
 
 import { hostUrl } from '../config/apiConfig';
 
@@ -12,13 +12,6 @@ const getUsername = () => {
   return localStorage.getItem('username');
 };
 
-const setAuthHeaders = (headers) => {
-  const token = getToken();
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-};
-
 const register = async (username, password, email) => {
   try {
     const response = await axios.post(hostUrl + '/api/User', { // Use Axios post method
@@ -27,7 +20,7 @@ const register = async (username, password, email) => {
       email,
     });
 
-    if (response.status === 200) { // Axios returns status instead of response.ok
+    if (response.status === 200) {
       // Registration successful
       toast.success('Registration successful', {
         position: toast.POSITION.TOP_RIGHT,
@@ -56,7 +49,7 @@ const login = async (username, password) => {
       password,
     });
 
-    if (response.status === 200) { // Axios returns status instead of response.ok
+    if (response.status === 200) {
       const data = response.data;
       const token = data.token;
 
@@ -84,29 +77,6 @@ const login = async (username, password) => {
   }
 };
 
-const fetchApiData = async (url, options = {}) => {
-  const headers = {
-    'Content-Type': 'application/json',
-  };
-
-  setAuthHeaders(headers);
-
-  try {
-    const response = await axios(url, {
-      ...options,
-      headers,
-    });
-
-    const data = response.data;
-    return data;
-  } catch (error) {
-    // Handle API errors here
-    // Example: throw new Error('API request failed');
-    console.error('Error occurred during API request', error);
-    return null;
-  }
-};
-
 const isTokenExpired = () => {
   const token = getToken();
   if (!token) {
@@ -130,4 +100,4 @@ const logout = () => {
   });
 };
 
-export { register, login, getToken, getUsername, fetchApiData, isTokenExpired, logout };
+export { register, login, getToken, getUsername, isTokenExpired, logout };
