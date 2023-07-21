@@ -40,6 +40,7 @@ function Dashboard() {
                 <ContactList
                     isPosting={modalIsVisible}
                     onStopPosting={hideModalHandler}
+                    onUpdateContact={showModalHandler}
                 />
             </main>
         </>

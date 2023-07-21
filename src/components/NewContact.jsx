@@ -1,39 +1,55 @@
 import { useState } from 'react';
 
 import classes from './NewContact.module.css';
-import { fetchApiData } from '../services/authServices';
 import { hostUrl } from '../config/apiConfig';
+import { getToken } from '../services/authServices';
 
 function NewContact({ onCancel, onAddContact }) {
-    const [enteredBody, setEnteredBody] = useState('');
-    const [enteredAuthor, setEnteredAuthor] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    function bodyChangeHandler(event) {
-        setEnteredBody(event.target.value);
-    }
-
-    function authorChangeHandler(event) {
-        setEnteredAuthor(event.target.value);
-    }
-
-    function submitHandler(event) {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        fetchApiData(hostUrl + '/api/Contact/GetContacts')
+        const { firstName, lastName, phoneNumber, email, socialNetworkLink } = event.target.elements;
+
+        setIsSubmitting(true);
+
+        const contactData = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            phoneNumber: phoneNumber.value,
+            email: email.value,
+            socialNetworkLink: socialNetworkLink.value,
+        };
+
+        onAddContact(contactData);
         onCancel();
-    }
+
+    };
 
     return (
-        <form className={classes.form} onSubmit={submitHandler}>
+        <form className={classes.form} onSubmit={handleSubmit}>
             <p>
-                <label htmlFor="body">Text</label>
-                <textarea id="body" required rows={3} onChange={bodyChangeHandler} />
+                <label htmlFor="firstName">First name</label>
+                <input type="text" name="firstName" id="firstName" />
             </p>
             <p>
-                <label htmlFor="name">Your name</label>
-                <input type="text" id="name" required onChange={authorChangeHandler} />
+                <label htmlFor="lastName">Last name</label>
+                <input type="text" name="lastName" id="lastName" required />
+            </p>
+            <p>
+                <label htmlFor="phoneNumber">Phone number</label>
+                <input type="text" name="phoneNumber" id="phoneNumber" required />
+            </p>
+            <p>
+                <label htmlFor="email">Last name</label>
+                <input type="email" name="email" id="email" required />
+            </p>
+            <p>
+                <label htmlFor="socialNetworkLink">Social network link</label>
+                <input type="text" id="socialNetworkLink" required />
             </p>
             <p className={classes.actions}>
-                <button type="button" onClick={onCancel}>
+                <button type="button" onClick={onCancel} disabled={isSubmitting}>
                     Cancel
                 </button>
                 <button>Submit</button>
