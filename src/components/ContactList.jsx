@@ -9,6 +9,8 @@ import { getToken, fetchApiData, isTokenExpired } from '../services/authServices
 import axios from 'axios';
 import UpdateModal from './UpdateModal';
 import UpdateContact from './UpdateContact';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ContactList({ isPosting, onStopPosting, isCreating }) {
     const [contacts, setContacts] = useState([]);
@@ -93,7 +95,17 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
             );
 
             if (response.status === 200) {
-                window.location.reload();
+                // Update the contact in the contacts state with the new data
+                setContacts((prevContacts) =>
+                    prevContacts.map((contact) =>
+                        contact.id === selectedContact.id ? { ...contact, ...contactData } : contact
+                    )
+                );
+                toast.success('Update successful', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                // Hide the update modal after successful update
+                hideUpdateModalHandler();
             } else {
                 console.log('Request failed:', response.status);
             }
@@ -101,6 +113,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
             console.error('Error:', error);
         }
     };
+
 
     const deleteContactHandler = async () => {
         try {
@@ -115,7 +128,15 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
             );
 
             if (response.status === 200) {
-                window.location.reload();
+                // Remove the deleted contact from the contacts state
+                setContacts((prevContacts) =>
+                    prevContacts.filter((contact) => contact.id !== selectedContact.id)
+                );
+                toast.success('Delete successful', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+                // Hide the update modal after successful deletion
+                hideUpdateModalHandler();
             } else {
                 console.log('Request failed:', response.status);
             }
@@ -123,6 +144,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
             console.error('Error:', error);
         }
     };
+
 
 
     return (
