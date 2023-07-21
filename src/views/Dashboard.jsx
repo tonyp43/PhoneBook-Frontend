@@ -35,12 +35,11 @@ function Dashboard() {
 
     return (
         <>
-            <MainHeader onCreateContact={showModalHandler} />
+            <MainHeader onCreateContact={showModalHandler} isCreating />
             <main>
                 <ContactList
                     isPosting={modalIsVisible}
                     onStopPosting={hideModalHandler}
-                    onUpdateContact={showModalHandler}
                 />
             </main>
         </>

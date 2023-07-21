@@ -41,7 +41,7 @@ function NewContact({ onCancel, onAddContact }) {
                 <input type="text" name="phoneNumber" id="phoneNumber" required />
             </p>
             <p>
-                <label htmlFor="email">Last name</label>
+                <label htmlFor="email">Email</label>
                 <input type="email" name="email" id="email" required />
             </p>
             <p>
@@ -49,10 +49,10 @@ function NewContact({ onCancel, onAddContact }) {
                 <input type="text" id="socialNetworkLink" required />
             </p>
             <p className={classes.actions}>
-                <button type="button" onClick={onCancel} disabled={isSubmitting}>
+                <button type="button" onClick={onCancel} disabled={isSubmitting} >
                     Cancel
                 </button>
-                <button>Submit</button>
+                <button disabled={isSubmitting}>Submit</button>
             </p>
         </form>
     );
