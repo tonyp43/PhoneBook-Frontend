@@ -11,6 +11,7 @@ function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, o
     // Handle the contact click and pass the contact data to onUpdate
     const handleContactClick = () => {
         onUpdate();
+        onClickDropdownItem();
     };
 
     return (
@@ -24,7 +25,6 @@ function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, o
                     className={classes.text}
                     onClick={(event) => {
                         event.stopPropagation(); // Prevent the click event from bubbling to the parent Contact element
-                        onClickDropdownItem(); // Call the onClickDropdownItem function to open the UpdateContact component
                     }}
                 >
                     <MdLink className={classes.icon} />{socialNetworkLink}
