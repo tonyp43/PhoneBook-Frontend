@@ -64,7 +64,7 @@ function UpdateContact({ contact, onUpdateContact, onDeleteContact }) {
                 <button type="button" >
                     Cancel
                 </button>
-                <button type="submit" >Update</button>
+                <button type="submit" disabled={isSubmitting} >Update</button>
                 <button type="button" onClick={handleDelete} disabled={isSubmitting} >Delete</button>
             </p>
         </form>
