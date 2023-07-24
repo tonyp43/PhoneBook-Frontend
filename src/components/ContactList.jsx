@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Contact from './Contact';
 import NewContact from './NewContact';
 import Modal from './Modal';
@@ -10,12 +10,13 @@ import UpdateContact from './UpdateContact';
 import ContactSearch from './ContactSearch';
 import * as apiServices from '../services/apiServices';
 
-
 function ContactList({ isPosting, onStopPosting, isCreating }) {
     const [contacts, setContacts] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
     const [showUpdateContact, setShowUpdateContact] = useState(false);
+
+    const newContactRef = useRef(null); // Ref for the new contact element
 
     function showUpdateModalHandler(contact) {
         setSelectedContact(contact);
@@ -58,13 +59,20 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                 toast.success('Contact added successfully', {
                     position: toast.POSITION.TOP_RIGHT,
                 });
+
+                // Scroll to the new contact after it's created
+                if (newContactRef.current) {
+                    newContactRef.current.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                    });
+                }
             }
         } catch (error) {
             console.error(error);
             // Handle the error state appropriately, e.g., display an error message.
         }
     };
-
 
     const updateContactHandler = async (contactData) => {
         const success = await apiServices.updateContact(contactData, selectedContact.id);
@@ -113,7 +121,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
             )}
             {!isFetching && contacts.length > 0 && (
                 <ul className={classes.contacts}>
-                    {contacts.map((contact) => (
+                    {contacts.map((contact, index) => (
                         <Contact
                             key={contact.id}
                             firstName={contact.firstName}
@@ -122,7 +130,8 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                             email={contact.email}
                             socialNetworkLink={contact.socialNetworkLink}
                             onUpdate={() => showUpdateModalHandler(contact)}
-                            onClickDropdownItem={() => showUpdateModalHandler(contact)} // Pass the handler to the Contact component
+                            onClickDropdownItem={() => showUpdateModalHandler(contact)}
+                            ref={index === contacts.length - 1 ? newContactRef : null} // Set the ref for the last contact
                         />
                     ))}
                 </ul>

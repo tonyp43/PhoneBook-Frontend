@@ -1,7 +1,8 @@
 import classes from './Contact.module.css';
 import { MdPhone, MdEmail, MdLink } from 'react-icons/md';
+import React, { forwardRef } from 'react';
 
-function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, onUpdate, onClickDropdownItem }) {
+const Contact = forwardRef(({ firstName, lastName, phoneNumber, email, socialNetworkLink, onUpdate, onClickDropdownItem }, ref) => {
     // Check if socialNetworkLink is an absolute URL, if not, prepend "https://"
     const absoluteSocialNetworkLink =
         socialNetworkLink.startsWith('http://') || socialNetworkLink.startsWith('https://')
@@ -15,7 +16,7 @@ function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, o
     };
 
     return (
-        <li className={classes.contact} onClick={handleContactClick}>
+        <li ref={ref} className={classes.contact} onClick={handleContactClick}>
             <div>
                 <p className={classes.author}>{firstName + ' ' + lastName}</p>
                 <p className={classes.text}><MdPhone className={classes.icon} />{phoneNumber}</p>
@@ -32,6 +33,6 @@ function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, o
             </div>
         </li>
     );
-}
+});
 
 export default Contact;
