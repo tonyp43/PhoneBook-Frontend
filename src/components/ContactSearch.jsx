@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import classes from './ContactSearch.module.css';
+import classes from '../styles/ContactSearch.module.css';
 
 function ContactSearch({ contacts, onContactSelect }) {
     const [searchTerm, setSearchTerm] = useState('');

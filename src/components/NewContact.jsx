@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import classes from './NewContact.module.css';
+import classes from '../styles/NewContact.module.css';
 import { hostUrl } from '../config/apiConfig';
 import { getToken } from '../services/authServices';
 

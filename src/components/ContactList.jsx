@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import Contact from './Contact';
 import NewContact from './NewContact';
 import Modal from './Modal';
-import classes from './ContactList.module.css';
+import classes from '../styles/ContactList.module.css';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UpdateModal from './UpdateModal';

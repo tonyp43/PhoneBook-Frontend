@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import classes from './UpdateContact.module.css';
+import classes from '../styles/UpdateContact.module.css';
 
 function UpdateContact({ contact, onUpdateContact, onDeleteContact, onClose }) {
     const [firstName, setFirstName] = useState(contact.firstName || '');

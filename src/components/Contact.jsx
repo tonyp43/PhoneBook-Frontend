@@ -1,4 +1,4 @@
-import classes from './Contact.module.css';
+import classes from '../styles/Contact.module.css';
 import { MdPhone, MdEmail, MdLink } from 'react-icons/md';
 import React, { forwardRef } from 'react';
 

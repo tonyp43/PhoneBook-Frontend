@@ -1,5 +1,5 @@
 import React from 'react';
-import classes from './UpdateModal.module.css';
+import classes from '../styles/UpdateModal.module.css';
 
 const UpdateModal = ({ onClose, children }) => {
     return (
