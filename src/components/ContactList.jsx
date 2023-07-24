@@ -7,20 +7,30 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UpdateModal from './UpdateModal';
 import UpdateContact from './UpdateContact';
+import ContactSearch from './ContactSearch';
 import * as apiServices from '../services/apiServices';
+
 
 function ContactList({ isPosting, onStopPosting, isCreating }) {
     const [contacts, setContacts] = useState([]);
     const [isFetching, setIsFetching] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
+    const [showUpdateContact, setShowUpdateContact] = useState(false);
 
     function showUpdateModalHandler(contact) {
         setSelectedContact(contact);
+        setShowUpdateContact(true); // Open the UpdateContact component
     }
 
     function hideUpdateModalHandler() {
         setSelectedContact(null);
+        setShowUpdateContact(false); // Close the UpdateContact component
     }
+
+    const handleContactSelect = (contact) => {
+        setSelectedContact(contact);
+        setShowUpdateContact(true);
+    };
 
     useEffect(() => {
         const fetchContacts = async () => {
@@ -39,11 +49,22 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
     }, []);
 
     const addContactHandler = async (contactData) => {
-        const success = await apiServices.addContact(contactData);
-        if (success) {
-            setContacts((existingContacts) => [contactData, ...existingContacts]);
+        try {
+            const success = await apiServices.addContact(contactData);
+            if (success) {
+                // Fetch the updated list of contacts after adding a new contact
+                const updatedContacts = await apiServices.fetchContacts();
+                setContacts(updatedContacts);
+                toast.success('Contact added successfully', {
+                    position: toast.POSITION.TOP_RIGHT,
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            // Handle the error state appropriately, e.g., display an error message.
         }
     };
+
 
     const updateContactHandler = async (contactData) => {
         const success = await apiServices.updateContact(contactData, selectedContact.id);
@@ -75,9 +96,14 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
 
     return (
         <>
-            {selectedContact && (
+            <ContactSearch contacts={contacts} onContactSelect={handleContactSelect} />
+            {showUpdateContact && selectedContact && (
                 <UpdateModal onClose={hideUpdateModalHandler}>
-                    <UpdateContact contact={selectedContact} onUpdateContact={updateContactHandler} onDeleteContact={deleteContactHandler} />
+                    <UpdateContact
+                        contact={selectedContact}
+                        onUpdateContact={updateContactHandler}
+                        onDeleteContact={deleteContactHandler}
+                    />
                 </UpdateModal>
             )}
             {isPosting && (
@@ -96,6 +122,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                             email={contact.email}
                             socialNetworkLink={contact.socialNetworkLink}
                             onUpdate={() => showUpdateModalHandler(contact)}
+                            onClickDropdownItem={() => showUpdateModalHandler(contact)} // Pass the handler to the Contact component
                         />
                     ))}
                 </ul>

@@ -1,20 +1,20 @@
 import classes from './Contact.module.css';
 import { MdPhone, MdEmail, MdLink } from 'react-icons/md';
 
-function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, onUpdate }) {
+function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, onUpdate, onClickDropdownItem }) {
     // Check if socialNetworkLink is an absolute URL, if not, prepend "https://"
     const absoluteSocialNetworkLink =
         socialNetworkLink.startsWith('http://') || socialNetworkLink.startsWith('https://')
             ? socialNetworkLink
             : 'https://' + socialNetworkLink;
 
-    // Define a separate click handler for the social media link
-    const onSocialNetworkLinkClick = (event) => {
-        event.stopPropagation(); // Prevent the click event from bubbling to the parent Contact element
+    // Handle the contact click and pass the contact data to onUpdate
+    const handleContactClick = () => {
+        onUpdate();
     };
 
     return (
-        <li className={classes.contact} onClick={onUpdate}>
+        <li className={classes.contact} onClick={handleContactClick}>
             <div>
                 <p className={classes.author}>{firstName + ' ' + lastName}</p>
                 <p className={classes.text}><MdPhone className={classes.icon} />{phoneNumber}</p>
@@ -22,7 +22,10 @@ function Contact({ firstName, lastName, phoneNumber, email, socialNetworkLink, o
                 <a
                     href={absoluteSocialNetworkLink}
                     className={classes.text}
-                    onClick={onSocialNetworkLinkClick} // Attach the onClick handler to the link
+                    onClick={(event) => {
+                        event.stopPropagation(); // Prevent the click event from bubbling to the parent Contact element
+                        onClickDropdownItem(); // Call the onClickDropdownItem function to open the UpdateContact component
+                    }}
                 >
                     <MdLink className={classes.icon} />{socialNetworkLink}
                 </a>
