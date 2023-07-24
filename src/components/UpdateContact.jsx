@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import classes from './UpdateContact.module.css';
 
-function UpdateContact({ contact, onUpdateContact, onDeleteContact }) {
+function UpdateContact({ contact, onUpdateContact, onDeleteContact, onClose }) {
     const [firstName, setFirstName] = useState(contact.firstName || '');
     const [lastName, setLastName] = useState(contact.lastName || '');
     const [phoneNumber, setPhoneNumber] = useState(contact.phoneNumber || '');
@@ -61,9 +61,7 @@ function UpdateContact({ contact, onUpdateContact, onDeleteContact }) {
                 <input type="text" name="socialNetworkLink" id="socialNetworkLink" required value={socialNetworkLink} onChange={(e) => setSocialNetworkLink(e.target.value)} />
             </p>
             <p className={classes.actions}>
-                <button type="button" >
-                    Cancel
-                </button>
+                <button type="button" onClick={onClose} >Cancel</button>
                 <button type="submit" disabled={isSubmitting} >Update</button>
                 <button type="button" onClick={handleDelete} disabled={isSubmitting} >Delete</button>
             </p>

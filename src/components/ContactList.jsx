@@ -118,6 +118,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                         contact={selectedContact}
                         onUpdateContact={updateContactHandler}
                         onDeleteContact={deleteContactHandler}
+                        onClose={hideUpdateModalHandler}
                     />
                 </UpdateModal>
             )}
