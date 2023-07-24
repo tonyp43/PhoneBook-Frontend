@@ -49,6 +49,13 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
         fetchContacts();
     }, []);
 
+    const sortedContacts = contacts.slice().sort((a, b) => {
+        // Customize the sorting logic based on your requirements
+        const nameA = a.firstName + a.lastName;
+        const nameB = b.firstName + b.lastName;
+        return nameA.localeCompare(nameB);
+    });
+
     const addContactHandler = async (contactData) => {
         try {
             const success = await apiServices.addContact(contactData);
@@ -61,12 +68,12 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                 });
 
                 // Scroll to the new contact after it's created
-                if (newContactRef.current) {
-                    newContactRef.current.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center',
-                    });
-                }
+                // if (newContactRef.current) {
+                //     newContactRef.current.scrollIntoView({
+                //         behavior: 'smooth',
+                //         block: 'center',
+                //     });
+                // }
             }
         } catch (error) {
             console.error(error);
@@ -119,9 +126,9 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                     <NewContact onCancel={onStopPosting} onAddContact={addContactHandler} />
                 </Modal>
             )}
-            {!isFetching && contacts.length > 0 && (
+            {!isFetching && sortedContacts.length > 0 && (
                 <ul className={classes.contacts}>
-                    {contacts.map((contact, index) => (
+                    {sortedContacts.map((contact, index) => (
                         <Contact
                             key={contact.id}
                             firstName={contact.firstName}
@@ -131,7 +138,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                             socialNetworkLink={contact.socialNetworkLink}
                             onUpdate={() => showUpdateModalHandler(contact)}
                             onClickDropdownItem={() => showUpdateModalHandler(contact)}
-                            ref={index === contacts.length - 1 ? newContactRef : null} // Set the ref for the last contact
+                            ref={index === sortedContacts.length - 1 ? newContactRef : null} // Set the ref for the last contact
                         />
                     ))}
                 </ul>
