@@ -5,8 +5,7 @@ import { getToken, isTokenExpired } from './authServices';
 export async function fetchContacts() {
     try {
         if (!getToken() || isTokenExpired()) {
-            // Token is not available or expired, redirect to login or perform any other action
-            // Example: history.push('/login'); // if you are using React Router
+            //TODO: Implement something for when the token expires while the user is still using the app
             return [];
         }
 

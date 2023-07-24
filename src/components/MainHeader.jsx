@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaUserCircle, FaPlus, FaSignOutAlt } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import styles from '../styles/MainHeader.module.css';
 import { useNavigate } from 'react-router-dom';
 import { getUsername, logout } from '../services/authServices';

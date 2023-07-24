@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
 import classes from '../styles/NewContact.module.css';
-import { hostUrl } from '../config/apiConfig';
-import { getToken } from '../services/authServices';
 
 function NewContact({ onCancel, onAddContact }) {
     const [isSubmitting, setIsSubmitting] = useState(false);

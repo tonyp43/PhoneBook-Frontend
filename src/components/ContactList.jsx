@@ -66,18 +66,9 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                 toast.success('Contact added successfully', {
                     position: toast.POSITION.TOP_RIGHT,
                 });
-
-                // Scroll to the new contact after it's created
-                // if (newContactRef.current) {
-                //     newContactRef.current.scrollIntoView({
-                //         behavior: 'smooth',
-                //         block: 'center',
-                //     });
-                // }
             }
         } catch (error) {
             console.error(error);
-            // Handle the error state appropriately, e.g., display an error message.
         }
     };
 
