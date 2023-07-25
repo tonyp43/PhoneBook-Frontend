@@ -9,6 +9,7 @@ function NewContact({ onCancel, onAddContact }) {
         event.preventDefault();
         const { firstName, lastName, phoneNumber, email, socialNetworkLink } = event.target.elements;
 
+        //disable button while submitted
         setIsSubmitting(true);
 
         const contactData = {

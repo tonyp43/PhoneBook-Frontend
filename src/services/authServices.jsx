@@ -60,7 +60,7 @@ const login = async (username, password) => {
 const isTokenExpired = () => {
   const token = getToken();
   if (!token) {
-    // No token found
+    //token expired... return true
     return true;
   }
   const tokenPayload = JSON.parse(atob(token.split('.')[1]));

@@ -56,6 +56,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
         return nameA.localeCompare(nameB);
     });
 
+    //call api services to add a new contact
     const addContactHandler = async (contactData) => {
         try {
             const success = await apiServices.addContact(contactData);
@@ -72,6 +73,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
         }
     };
 
+    //call api services to update a contact
     const updateContactHandler = async (contactData) => {
         const success = await apiServices.updateContact(contactData, selectedContact.id);
         if (success) {
@@ -87,6 +89,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
         }
     };
 
+    //call api services to delete a contact
     const deleteContactHandler = async () => {
         const success = await apiServices.deleteContact(selectedContact.id);
         if (success) {
@@ -128,8 +131,8 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                             phoneNumber={contact.phoneNumber}
                             email={contact.email}
                             socialNetworkLink={contact.socialNetworkLink}
-                            onUpdate={() => showUpdateModalHandler(contact)}
-                            onClickDropdownItem={() => showUpdateModalHandler(contact)}
+                            onUpdate={() => showUpdateModalHandler(contact)} //when directly clicked on as an item, open update component
+                            onClickDropdownItem={() => showUpdateModalHandler(contact)} //when clicked from search dropdown, open update component
                             ref={index === sortedContacts.length - 1 ? newContactRef : null} // Set the ref for the last contact
                         />
                     ))}

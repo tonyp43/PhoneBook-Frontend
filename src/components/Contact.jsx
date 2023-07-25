@@ -25,7 +25,7 @@ const Contact = forwardRef(({ firstName, lastName, phoneNumber, email, socialNet
                     href={absoluteSocialNetworkLink}
                     className={classes.text}
                     onClick={(event) => {
-                        event.stopPropagation(); // Prevent the click event from bubbling to the parent Contact element
+                        event.stopPropagation(); // allows us to click on the link without opening the update component
                     }}
                 >
                     <MdLink className={classes.icon} />{socialNetworkLink}
