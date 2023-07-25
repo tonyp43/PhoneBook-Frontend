@@ -12,29 +12,47 @@ const request = async (url, data = null, type = 'post') => {
     const response = await axios[type](hostUrl + url, data);
     return response.data;
   } catch (error) {
+    const errorMessage = error.response.data;
+    toast.error(`Error occurred during ${type}: ${errorMessage}`, {
+      position: toast.POSITION.TOP_RIGHT,
+    });
     console.error(`Error occurred during ${type}`, error);
     return null;
   }
 };
 
+
 const register = async (username, password, email) => {
-  const data = {
-    username,
-    password,
-    email,
-  };
-  const response = await request('/api/User', data);
-  if (response) {
-    toast.success('Registration successful', {
+  try {
+    const response = await axios.post(hostUrl + '/api/User', { // Use Axios post method
+      username,
+      password,
+      email,
+    });
+
+    if (response.status === 200) { // Axios returns status instead of response.ok
+      // Registration successful
+      toast.success('Registration successful', {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return true;
+    } else {
+      // Registration failed
+      toast.error('Registration failed', {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+      return false;
+    }
+  } catch (error) {
+    console.error('Error occurred during registration', error.response.data);
+    toast.error(error.response.data, {
       position: toast.POSITION.TOP_RIGHT,
     });
-    return true;
+    return false;
   }
-  toast.error('Registration failed', {
-    position: toast.POSITION.TOP_RIGHT,
-  });
-  return false;
 };
+
+
 
 const login = async (username, password) => {
   const data = {
@@ -51,9 +69,6 @@ const login = async (username, password) => {
     });
     return true;
   }
-  toast.error('Login failed', {
-    position: toast.POSITION.TOP_RIGHT,
-  });
   return false;
 };
 

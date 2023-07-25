@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { hostUrl } from '../config/apiConfig';
 import { getToken, isTokenExpired } from './authServices';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export async function fetchContacts() {
     try {

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Contact from './Contact';
 import NewContact from './NewContact';
 import Modal from './Modal';
@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UpdateModal from './UpdateModal';
 import UpdateContact from './UpdateContact';
-import ContactSearch from './ContactSearch';
 import * as apiServices from '../services/apiServices';
 
 function ContactList({ isPosting, onStopPosting, isCreating }) {
@@ -15,8 +14,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
     const [isFetching, setIsFetching] = useState(false);
     const [selectedContact, setSelectedContact] = useState(null);
     const [showUpdateContact, setShowUpdateContact] = useState(false);
-
-    const newContactRef = useRef(null); // Ref for the new contact element
+    const [searchTerm, setSearchTerm] = useState('');
 
     function showUpdateModalHandler(contact) {
         setSelectedContact(contact);
@@ -27,11 +25,6 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
         setSelectedContact(null);
         setShowUpdateContact(false); // Close the UpdateContact component
     }
-
-    const handleContactSelect = (contact) => {
-        setSelectedContact(contact);
-        setShowUpdateContact(true);
-    };
 
     useEffect(() => {
         const fetchContacts = async () => {
@@ -49,13 +42,6 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
         fetchContacts();
     }, []);
 
-    const sortedContacts = contacts.slice().sort((a, b) => {
-        // Customize the sorting logic based on your requirements
-        const nameA = a.firstName + a.lastName;
-        const nameB = b.firstName + b.lastName;
-        return nameA.localeCompare(nameB);
-    });
-
     //call api services to add a new contact
     const addContactHandler = async (contactData) => {
         try {
@@ -70,6 +56,9 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
             }
         } catch (error) {
             console.error(error);
+            toast.error('Error: ' + error, {
+                position: toast.POSITION.TOP_RIGHT,
+            });
         }
     };
 
@@ -93,9 +82,7 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
     const deleteContactHandler = async () => {
         const success = await apiServices.deleteContact(selectedContact.id);
         if (success) {
-            setContacts((prevContacts) =>
-                prevContacts.filter((contact) => contact.id !== selectedContact.id)
-            );
+            setContacts((prevContacts) => prevContacts.filter((contact) => contact.id !== selectedContact.id));
             toast.success('Delete successful', {
                 position: toast.POSITION.TOP_RIGHT,
             });
@@ -103,9 +90,26 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
         }
     };
 
+    // Filter contacts based on the search term
+    const filteredContacts = contacts.filter(
+        (contact) =>
+            `${contact.firstName} ${contact.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    // Render all contacts when the search term is empty
+    const displayedContacts = searchTerm.trim() === '' ? contacts : filteredContacts;
+
     return (
         <>
-            <ContactSearch contacts={contacts} onContactSelect={handleContactSelect} />
+            {/* Render a search input to filter contacts */}
+            <div className={classes.search}>
+                <input className={classes.search}
+                    type="text"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder="Search by name..."
+                />
+            </div>
             {showUpdateContact && selectedContact && (
                 <UpdateModal onClose={hideUpdateModalHandler}>
                     <UpdateContact
@@ -121,9 +125,9 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                     <NewContact onCancel={onStopPosting} onAddContact={addContactHandler} />
                 </Modal>
             )}
-            {!isFetching && sortedContacts.length > 0 && (
+            {!isFetching && displayedContacts.length > 0 && (
                 <ul className={classes.contacts}>
-                    {sortedContacts.map((contact, index) => (
+                    {displayedContacts.map((contact) => (
                         <Contact
                             key={contact.id}
                             firstName={contact.firstName}
@@ -131,17 +135,15 @@ function ContactList({ isPosting, onStopPosting, isCreating }) {
                             phoneNumber={contact.phoneNumber}
                             email={contact.email}
                             socialNetworkLink={contact.socialNetworkLink}
-                            onUpdate={() => showUpdateModalHandler(contact)} //when directly clicked on as an item, open update component
-                            onClickDropdownItem={() => showUpdateModalHandler(contact)} //when clicked from search dropdown, open update component
-                            ref={index === sortedContacts.length - 1 ? newContactRef : null} // Set the ref for the last contact
+                            onUpdate={() => showUpdateModalHandler(contact)}
+                            onClickDropdownItem={() => showUpdateModalHandler(contact)}
                         />
                     ))}
                 </ul>
             )}
-            {!isFetching && contacts.length === 0 && (
+            {!isFetching && filteredContacts.length === 0 && (
                 <div style={{ textAlign: 'center', color: 'white', backgroundColor: '#7f50e4' }}>
-                    <h2>There are no contacts yet.</h2>
-                    <p>Start adding some!</p>
+                    <h2>No matching contacts found.</h2>
                 </div>
             )}
             {isFetching && (
