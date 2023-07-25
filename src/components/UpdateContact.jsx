@@ -35,6 +35,7 @@ function UpdateContact({ contact, onUpdateContact, onDeleteContact, onClose }) {
     };
 
     const handleDelete = async () => {
+        setIsSubmitting(true);
         onDeleteContact(contact);
     };
 
