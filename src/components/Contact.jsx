@@ -15,20 +15,30 @@ const Contact = forwardRef(({ firstName, lastName, phoneNumber, email, socialNet
         onClickDropdownItem();
     };
 
+    const stopPropagation = (event) => {
+        event.stopPropagation();
+    };
+
     return (
         <li ref={ref} className={classes.contact} onClick={handleContactClick}>
             <div>
                 <p className={classes.author}>{firstName + ' ' + lastName}</p>
-                <p className={classes.text}><MdPhone className={classes.icon} />{phoneNumber}</p>
-                <p className={classes.text}><MdEmail className={classes.icon} />{email}</p>
+                <a className={classes.text} href={`tel:${phoneNumber}`} onClick={stopPropagation}>
+                    <MdPhone className={classes.icon} />
+                    {phoneNumber}
+                </a>
+                <a className={classes.text} href={`mailto:${email}`} onClick={stopPropagation}>
+                    <MdEmail className={classes.icon} />
+                    {email}
+                </a>
                 <a
                     href={absoluteSocialNetworkLink}
                     className={classes.text}
-                    onClick={(event) => {
-                        event.stopPropagation(); // allows us to click on the link without opening the update component
-                    }}
+                    onClick={stopPropagation}
+                    target="_blank"
                 >
-                    <MdLink className={classes.icon} />{socialNetworkLink}
+                    <MdLink className={classes.icon} />
+                    {socialNetworkLink}
                 </a>
             </div>
         </li>
